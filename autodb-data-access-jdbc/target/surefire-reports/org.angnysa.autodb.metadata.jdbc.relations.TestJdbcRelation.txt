@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+Test set: org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.572 s <<< FAILURE! - in org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation
+org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.testDetectManyToOne  Time elapsed: 0.002 s  <<< ERROR!
+java.lang.NullPointerException: table is marked non-null but is null
+	at org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.assertRelation(TestJdbcRelation.java:160)
+	at org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.testDetectManyToOne(TestJdbcRelation.java:148)
+
+org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.testDetectManyToMany  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.NullPointerException: table is marked non-null but is null
+	at org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.assertRelation(TestJdbcRelation.java:160)
+	at org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.testDetectManyToMany(TestJdbcRelation.java:153)
+
+org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.testDetectOneToOne  Time elapsed: 0.01 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "org.angnysa.autodb.metadata.jdbc.JdbcTable.getFullyQualifiedName()" because the return value of "org.angnysa.autodb.metadata.jdbc.JdbcIndex.getTable()" is null
+	at org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.assertRelation(TestJdbcRelation.java:166)
+	at org.angnysa.autodb.metadata.jdbc.relations.TestJdbcRelation.testDetectOneToOne(TestJdbcRelation.java:143)
+

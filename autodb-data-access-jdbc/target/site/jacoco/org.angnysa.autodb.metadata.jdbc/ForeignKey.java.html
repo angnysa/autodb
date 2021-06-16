@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ForeignKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">autodb-data-access-jdbc</a> &gt; <a href="index.source.html" class="el_package">org.angnysa.autodb.metadata.jdbc</a> &gt; <span class="el_source">ForeignKey.java</span></div><h1>ForeignKey.java</h1><pre class="source lang-java linenums">package org.angnysa.autodb.metadata.jdbc;
+
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import lombok.Value;
+import org.angnysa.autodb.metadata.api.utils.Dumper;
+
+<span class="pc bpc" id="L8" title="48 of 52 branches missed.">@Value</span>
+public class ForeignKey {
+
+<span class="fc" id="L11">    public enum Action {</span>
+<span class="fc" id="L12">		NoAction, Restrict, SetDefault, SetNull, Cascade</span>
+	}
+
+<span class="fc" id="L15">	public enum ValidationDeferrability {</span>
+<span class="fc" id="L16">		NotDeferrable, Deferrable, InitiallyDeferred</span>
+	}
+
+<span class="fc" id="L19">	@NonNull String name;</span>
+<span class="fc" id="L20">	@NonNull JdbcIndex referencing;</span>
+<span class="fc" id="L21">	@NonNull JdbcUniqueIndex referenced;</span>
+<span class="nc" id="L22">	@NonNull Action actionOnUpdate;</span>
+<span class="nc" id="L23">	@NonNull Action actionOnDelete;</span>
+<span class="nc" id="L24">	@NonNull ValidationDeferrability validationDeferrability;</span>
+
+<span class="pc bpc" id="L26" title="6 of 12 branches missed.">	public ForeignKey(@NonNull String name, @NonNull JdbcIndex referencing, @NonNull JdbcUniqueIndex referenced, @NonNull Action actionOnUpdate, @NonNull Action actionOnDelete, @NonNull ValidationDeferrability validationDeferrability) {</span>
+
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">		if (referencing.getColumns().size() != referenced.getColumns().size()) {</span>
+<span class="nc" id="L29">			throw new IllegalArgumentException(</span>
+<span class="nc" id="L30">					String.format(</span>
+							&quot;Cannot create foreign key '%s': Referencing index and referenced indexes must have the same size: %s, %s&quot;
+							, name, referencing, referenced));
+		}
+
+<span class="fc" id="L35">		this.name = name;</span>
+<span class="fc" id="L36">		this.referencing = referencing;</span>
+<span class="fc" id="L37">		this.referenced = referenced;</span>
+<span class="fc" id="L38">		this.actionOnUpdate = actionOnUpdate;</span>
+<span class="fc" id="L39">		this.actionOnDelete = actionOnDelete;</span>
+<span class="fc" id="L40">		this.validationDeferrability = validationDeferrability;</span>
+<span class="fc" id="L41">	}</span>
+
+	public boolean isMandatory() {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		for (JdbcColumn column : getReferencing().getColumns()) {</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">			if (column.isNullable()) {</span>
+<span class="nc" id="L46">				return false;</span>
+			}
+<span class="fc" id="L48">		}</span>
+
+<span class="fc" id="L50">		return true;</span>
+	}
+
+<span class="nc" id="L53">	@SneakyThrows</span>
+	@Override
+	public String toString() {
+<span class="nc" id="L56">		return String.format(&quot;%s '%s' %s %s references %s %s on update %s on delete %s defer %s&quot;,</span>
+<span class="nc" id="L57">				getClass().getSimpleName(),</span>
+<span class="nc" id="L58">				getName(),</span>
+<span class="nc" id="L59">				getReferencing().getTable().getFullyQualifiedName(),</span>
+<span class="nc" id="L60">				Dumper.columnsName(getReferencing().getColumns()),</span>
+<span class="nc" id="L61">				getReferenced().getTable().getFullyQualifiedName(),</span>
+<span class="nc" id="L62">				Dumper.columnsName(getReferenced().getColumns()),</span>
+				actionOnUpdate,
+				actionOnDelete,
+				validationDeferrability);
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

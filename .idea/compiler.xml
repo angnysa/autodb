@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="testcontainers-junit4-stub" />
+        <module name="autodb-data-access-api" />
+        <module name="autodb-data-access-jpa" />
+        <module name="autodb-data-access-api-typed" />
+        <module name="autodb-data-access-jdbc" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="autodb-data-access-api" target="11" />
+      <module name="autodb-data-access-api-typed" target="11" />
+      <module name="autodb-data-access-jdbc" target="11" />
+      <module name="autodb-data-access-jpa" target="11" />
+      <module name="autodb-metadata-jpa" target="11" />
+      <module name="autodb-root" target="11" />
+      <module name="crud" target="11" />
+      <module name="testcontainers-junit4-stub" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

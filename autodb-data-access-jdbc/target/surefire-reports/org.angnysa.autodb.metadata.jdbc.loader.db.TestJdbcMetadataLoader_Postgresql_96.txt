@@ -1,0 +1,100 @@
+-------------------------------------------------------------------------------
+Test set: org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96
+-------------------------------------------------------------------------------
+Tests run: 43, Failures: 7, Errors: 25, Skipped: 0, Time elapsed: 7.638 s <<< FAILURE! - in org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.03 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_121_A' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.019 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_121_B' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.016 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M21_A' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.017 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M21_B' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.016 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M2M_A' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.019 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M2M_B' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadPrimaryKey  Time elapsed: 0.016 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M2M_REL' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.135 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.091 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.095 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.085 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.082 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.071 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadRelations  Time elapsed: 0.077 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.063 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_121_A> but was: <test_121_a>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.065 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_121_B> but was: <test_121_b>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.057 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_M21_A> but was: <test_m21_a>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.057 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_M21_B> but was: <test_m21_b>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.056 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_M2M_A> but was: <test_m2m_a>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.061 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_M2M_B> but was: <test_m2m_b>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadTables  Time elapsed: 0.057 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <TEST_M2M_REL> but was: <test_m2m_rel>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadDatabase  Time elapsed: 0.016 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'public.id_test_m21_b_a' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.01 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.009 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.009 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.01 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.009 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.009 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadIndices  Time elapsed: 0.009 s  <<< ERROR!
+java.lang.NullPointerException
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadForeignKeys  Time elapsed: 0.044 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_121_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadForeignKeys  Time elapsed: 0.045 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_m21_b'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql_96.testLoadForeignKeys  Time elapsed: 0.049 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'public.test_m2m_rel'
+

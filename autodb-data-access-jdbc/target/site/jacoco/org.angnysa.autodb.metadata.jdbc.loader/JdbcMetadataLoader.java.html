@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JdbcMetadataLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">autodb-data-access-jdbc</a> &gt; <a href="index.source.html" class="el_package">org.angnysa.autodb.metadata.jdbc.loader</a> &gt; <span class="el_source">JdbcMetadataLoader.java</span></div><h1>JdbcMetadataLoader.java</h1><pre class="source lang-java linenums">package org.angnysa.autodb.metadata.jdbc.loader;
+
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import lombok.extern.log4j.Log4j2;
+import org.angnysa.autodb.metadata.api.Index;
+import org.angnysa.autodb.metadata.jdbc.*;
+import org.angnysa.autodb.metadata.jdbc.relations.JdbcRelation;
+import org.angnysa.autodb.metadata.jdbc.utils.JdbcConnectionUtil;
+import org.angnysa.autodb.metadata.jdbc.utils.NameUtil;
+
+import javax.sql.CommonDataSource;
+import java.io.StringWriter;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L25">@RequiredArgsConstructor</span>
+<span class="nc" id="L26">@Log4j2</span>
+public class JdbcMetadataLoader {
+
+    @FunctionalInterface
+    interface SqlBiFunction&lt;T, U, R&gt; {
+        R apply(T t, U u) throws SQLException;
+    }
+
+    @FunctionalInterface
+    interface SqlFunction&lt;T, R&gt; {
+        R apply(T t) throws SQLException;
+    }
+
+    private final CommonDataSource commonDataSource;
+
+    public JdbcDatabase loadDatabase(String catalogPattern, String schemaPattern, String tablePattern, String[] tableTypes) throws SQLException {
+<span class="nc" id="L42">        try(Connection connection = JdbcConnectionUtil.getConnection(commonDataSource)) {</span>
+
+<span class="nc" id="L44">            Map&lt;String, JdbcTable&gt; tables = loadTables(connection, catalogPattern, schemaPattern, tableTypes);</span>
+
+<span class="nc" id="L46">            Map&lt;JdbcTable, Map&lt;String, ForeignKey&gt;&gt; importedForeignKeys = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L48" title="All 2 branches missed.">            for (JdbcTable table : tables.values()) {</span>
+<span class="nc" id="L49">                importedForeignKeys.put(table, loadImportedForeignKeys(connection, table, tables));</span>
+<span class="nc" id="L50">            }</span>
+
+<span class="nc" id="L52">            Map&lt;JdbcTable, Map&lt;String, JdbcRelation&gt;&gt; relations = loadRelations(importedForeignKeys);</span>
+
+<span class="nc" id="L54">            DatabaseMetaData dmd = connection.getMetaData();</span>
+<span class="nc" id="L55">            JdbcDatabase db = new JdbcDatabase(dmd.getDatabaseProductName(), dmd.getDatabaseProductVersion(), tables, importedForeignKeys, relations);</span>
+
+<span class="nc" id="L57">            log.debug(&quot;Database loaded:\n{}&quot;, db);</span>
+
+<span class="nc" id="L59">            return db;</span>
+        }
+    }
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">    public Map&lt;String, JdbcTable&gt; loadTables(@NonNull Connection connection, String catalogPattern, String schemaPattern, String[] types) throws SQLException {</span>
+<span class="nc" id="L64">        try (ResultSet rs = connection.getMetaData().getTables(null, null, &quot;%&quot;, types)) {</span>
+<span class="nc" id="L65">            Map&lt;String, JdbcTable&gt; tables = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            while(rs.next()) {</span>
+<span class="nc" id="L68">                String catalog   = rs.getString(&quot;TABLE_CAT&quot;);   // table catalog (may be null)</span>
+<span class="nc" id="L69">                String schema    = rs.getString(&quot;TABLE_SCHEM&quot;); // table schema (may be null)</span>
+<span class="nc" id="L70">                String tableName = rs.getString(&quot;TABLE_NAME&quot;);  // table name</span>
+
+<span class="nc bnc" id="L72" title="All 4 branches missed.">                if (catalogPattern == null || catalog.matches(catalogPattern)) {</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">                    if (schemaPattern == null || schema.matches(schemaPattern)) {</span>
+<span class="nc" id="L74">                        String tableType = safeGetObject(rs, &quot;TABLE_TYPE&quot;, ResultSet::getString, &quot;&quot;);</span>
+<span class="nc" id="L75">                        String remarks   = safeGetObject(rs, &quot;REMARKS&quot;   , ResultSet::getString, &quot;&quot;);</span>
+
+<span class="nc" id="L77">                        List&lt;JdbcColumn&gt;       columns       = loadColumns(connection, catalog, schema, tableName);</span>
+<span class="nc" id="L78">                        Map&lt;String, JdbcIndex&gt; indexes       = loadIndexes(connection, catalog, schema, tableName, columns);</span>
+<span class="nc" id="L79">                        JdbcUniqueIndex        primaryKey    = loadPrimaryKey(connection, catalog, schema, tableName, columns);</span>
+
+<span class="nc" id="L81">                        JdbcTable table = new JdbcTable(catalog, schema, tableName, remarks, tableType, columns, primaryKey, indexes);</span>
+<span class="nc" id="L82">                        log.trace(&quot;Table loaded:\n{}&quot;, table);</span>
+
+<span class="nc" id="L84">                        tables.put(table.getFullyQualifiedName(), table);</span>
+                    }
+                }
+<span class="nc" id="L87">            }</span>
+
+<span class="nc" id="L89">            return tables;</span>
+        }
+    }
+
+<span class="nc bnc" id="L93" title="All 4 branches missed.">    public List&lt;JdbcColumn&gt; loadColumns(@NonNull Connection connection, String catalog, String schema, @NonNull String table) throws SQLException {</span>
+<span class="nc" id="L94">        try (ResultSet resultSet = connection.getMetaData().getColumns(catalog, schema, table, null)) {</span>
+<span class="nc" id="L95">            List&lt;JdbcColumn&gt; columns = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            while (resultSet.next()) {</span>
+
+<span class="nc" id="L99">                String typeName = resultSet.getString(&quot;TYPE_NAME&quot;);</span>
+<span class="nc" id="L100">                JDBCType jdbcType = JDBCType.valueOf(resultSet.getInt(&quot;DATA_TYPE&quot;));</span>
+
+<span class="nc" id="L102">                JdbcColumn column = new JdbcColumn(</span>
+<span class="nc" id="L103">                        resultSet.getString(&quot;COLUMN_NAME&quot;),</span>
+<span class="nc" id="L104">                        resultSet.getString(&quot;REMARKS&quot;),</span>
+                        typeName,
+                        jdbcType,
+<span class="nc" id="L107">                        &quot;YES&quot;.equals(resultSet.getString(&quot;IS_NULLABLE&quot;)),</span>
+<span class="nc" id="L108">                        resultSet.getInt(&quot;COLUMN_SIZE&quot;),</span>
+<span class="nc" id="L109">                        resultSet.getInt(&quot;DECIMAL_DIGITS&quot;),</span>
+<span class="nc" id="L110">                        resultSet.getInt(&quot;NUM_PREC_RADIX&quot;),</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">                        &quot;YES&quot;.equals(resultSet.getString(&quot;IS_AUTOINCREMENT&quot;)) || &quot;YES&quot;.equals(resultSet.getString(&quot;IS_GENERATEDCOLUMN&quot;)));</span>
+
+<span class="nc" id="L113">                columns.add(column);</span>
+
+<span class="nc" id="L115">                log.trace(&quot;Column loaded: {} :: {}&quot;, NameUtil.generateFullyQualifiedName(catalog, schema, table), column);</span>
+<span class="nc" id="L116">            }</span>
+
+<span class="nc" id="L118">            return columns;</span>
+        }
+    }
+
+<span class="nc bnc" id="L122" title="All 16 branches missed.">    @Value</span>
+    private static class IndexInfo {
+<span class="nc" id="L124">        String name;</span>
+<span class="nc" id="L125">        boolean unique;</span>
+    }
+
+<span class="nc bnc" id="L128" title="All 6 branches missed.">    public Map&lt;String, JdbcIndex&gt; loadIndexes(@NonNull Connection connection, String catalog, String schema, @NonNull String table, @NonNull List&lt;JdbcColumn&gt; tableColumns) throws SQLException {</span>
+<span class="nc" id="L129">        try (ResultSet resultSet = connection.getMetaData().getIndexInfo(catalog, schema, table, false, true)) {</span>
+<span class="nc" id="L130">            return aggregateResultSet(</span>
+                    resultSet,
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                    rs -&gt; new IndexInfo(rs.getString(&quot;INDEX_NAME&quot;), !rs.getBoolean(&quot;NON_UNIQUE&quot;)),</span>
+<span class="nc" id="L133">                    rs -&gt; rs.getShort(&quot;ORDINAL_POSITION&quot;),</span>
+<span class="nc" id="L134">                    rs -&gt; search(tableColumns, c -&gt; {</span>
+                        try {
+<span class="nc" id="L136">                            return c.getName().equals(rs.getString(&quot;COLUMN_NAME&quot;));</span>
+<span class="nc" id="L137">                        } catch (SQLException e) {</span>
+<span class="nc" id="L138">                            throw new RuntimeException(e);</span>
+                        }
+                    }),
+                    (indexInfo, indexColumns) -&gt; {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                        JdbcIndex index = indexInfo.isUnique()</span>
+<span class="nc" id="L143">                                ? new JdbcUniqueIndex(indexInfo.getName(), indexColumns)</span>
+<span class="nc" id="L144">                                : new JdbcIndex(indexInfo.getName(), indexColumns);</span>
+
+<span class="nc" id="L146">                        log.trace(&quot;Index loaded: {} :: {}&quot;, NameUtil.generateFullyQualifiedName(catalog, schema, table), index);</span>
+<span class="nc" id="L147">                        return index;</span>
+                    })
+<span class="nc" id="L149">                    .stream()</span>
+<span class="nc" id="L150">                    .collect(Collectors.toUnmodifiableMap(Index::getName, Function.identity()));</span>
+        }
+    }
+
+<span class="nc bnc" id="L154" title="All 6 branches missed.">    public JdbcUniqueIndex loadPrimaryKey(@NonNull Connection connection, String catalog, String schema, @NonNull String table, @NonNull List&lt;JdbcColumn&gt; tableColumns) throws SQLException {</span>
+<span class="nc" id="L155">        try (ResultSet resultSet = connection.getMetaData().getPrimaryKeys(catalog, schema, table)) {</span>
+<span class="nc" id="L156">            List&lt;JdbcUniqueIndex&gt; primaryKeys = aggregateResultSet(</span>
+                    resultSet,
+<span class="nc" id="L158">                    rs -&gt; rs.getString(&quot;PK_NAME&quot;),</span>
+<span class="nc" id="L159">                    rs -&gt; rs.getShort(&quot;KEY_SEQ&quot;),</span>
+<span class="nc" id="L160">                    rs -&gt; search(tableColumns, c -&gt; {</span>
+                        try {
+<span class="nc" id="L162">                            return c.getName().equals(rs.getString(&quot;COLUMN_NAME&quot;));</span>
+<span class="nc" id="L163">                        } catch (SQLException e) {</span>
+<span class="nc" id="L164">                            throw new RuntimeException(e);</span>
+                        }
+                    }),
+                    (name, columns) -&gt; {
+<span class="nc" id="L168">                        JdbcUniqueIndex pk = new JdbcUniqueIndex(name, columns);</span>
+<span class="nc" id="L169">                        log.trace(&quot;Primary Key loaded: {} :: {}&quot;, NameUtil.generateFullyQualifiedName(catalog, schema, table), pk);</span>
+<span class="nc" id="L170">                        return pk;</span>
+                    });
+
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if ( primaryKeys.size() == 0) {</span>
+<span class="nc" id="L174">                throw new IllegalStateException(String.format(&quot;Table '%s' has no primary key&quot;, NameUtil.generateFullyQualifiedName(catalog, schema, table)));</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            } else if (primaryKeys.size() == 1) {</span>
+<span class="nc" id="L176">                return primaryKeys.get(0);</span>
+            } else {
+<span class="nc" id="L178">                throw new IllegalStateException(String.format(&quot;Table '%s' has multiple primary keys&quot;, NameUtil.generateFullyQualifiedName(catalog, schema, table)));</span>
+            }
+        }
+    }
+
+<span class="nc bnc" id="L183" title="All 64 branches missed.">    @Value</span>
+    private static class FKInfo {
+<span class="nc bnc" id="L185" title="All 34 branches missed.">        @Value</span>
+        private static class Table {
+<span class="nc" id="L187">            @NonNull String catalog, schema;</span>
+<span class="nc" id="L188">            @NonNull String table;</span>
+        }
+
+<span class="nc" id="L191">        @NonNull String fkName;</span>
+<span class="nc" id="L192">        @NonNull Table pkTable, fkTable;</span>
+<span class="nc" id="L193">        @NonNull ForeignKey.Action onUpdate, onDelete;</span>
+<span class="nc" id="L194">        @NonNull ForeignKey.ValidationDeferrability deferrability;</span>
+    }
+
+<span class="nc bnc" id="L197" title="All 24 branches missed.">    @Value</span>
+    private static class FKColInfo {
+<span class="nc" id="L199">        @NonNull String pkColumn, fkColumn;</span>
+    }
+
+<span class="nc bnc" id="L202" title="All 6 branches missed.">    public Map&lt;String, ForeignKey&gt; loadImportedForeignKeys(@NonNull Connection connection, @NonNull JdbcTable table, @NonNull Map&lt;String, JdbcTable&gt; tables) throws SQLException {</span>
+<span class="nc" id="L203">        try (ResultSet resultSet = connection.getMetaData().getImportedKeys(table.getCatalog(), table.getSchema(), table.getName())) {</span>
+<span class="nc" id="L204">            return aggregateForeignKey(tables, resultSet);</span>
+        }
+    }
+
+    private Map&lt;String, ForeignKey&gt; aggregateForeignKey(Map&lt;String, JdbcTable&gt; tables, ResultSet resultSet) throws SQLException {
+<span class="nc" id="L209">        return aggregateResultSet(</span>
+                resultSet,
+<span class="nc" id="L211">                rs -&gt; new FKInfo(</span>
+<span class="nc" id="L212">                        rs.getString(&quot;FK_NAME&quot;),</span>
+                        new FKInfo.Table(
+<span class="nc" id="L214">                                rs.getString(&quot;PKTABLE_CAT&quot;),</span>
+<span class="nc" id="L215">                                rs.getString(&quot;PKTABLE_SCHEM&quot;),</span>
+<span class="nc" id="L216">                                rs.getString(&quot;PKTABLE_NAME&quot;)),</span>
+                        new FKInfo.Table(
+<span class="nc" id="L218">                                rs.getString(&quot;FKTABLE_CAT&quot;),</span>
+<span class="nc" id="L219">                                rs.getString(&quot;FKTABLE_SCHEM&quot;),</span>
+<span class="nc" id="L220">                                rs.getString(&quot;FKTABLE_NAME&quot;)),</span>
+<span class="nc" id="L221">                        mapImportedForeignKeyRule(rs.getShort(&quot;UPDATE_RULE&quot;)),</span>
+<span class="nc" id="L222">                        mapImportedForeignKeyRule(rs.getShort(&quot;DELETE_RULE&quot;)),</span>
+<span class="nc" id="L223">                        mapImportedDeferrability(rs.getShort(&quot;DEFERRABILITY&quot;))),</span>
+<span class="nc" id="L224">                rs -&gt; rs.getShort(&quot;KEY_SEQ&quot;),</span>
+<span class="nc" id="L225">                rs -&gt; new FKColInfo(rs.getString(&quot;PKCOLUMN_NAME&quot;), rs.getString(&quot;FKCOLUMN_NAME&quot;)),</span>
+<span class="nc" id="L226">                (fkInfo, columns) -&gt; buildForeignKey(fkInfo, columns, tables))</span>
+<span class="nc" id="L227">                .stream()</span>
+<span class="nc" id="L228">                .collect(Collectors.toUnmodifiableMap(ForeignKey::getName, Function.identity()));</span>
+    }
+
+<span class="nc bnc" id="L231" title="All 6 branches missed.">    private ForeignKey buildForeignKey(@NonNull FKInfo fkInfo, @NonNull List&lt;FKColInfo&gt; columns, @NonNull Map&lt;String, JdbcTable&gt; tables) {</span>
+
+<span class="nc" id="L233">        ForeignKey fk = new ForeignKey(</span>
+<span class="nc" id="L234">                fkInfo.getFkName(),</span>
+<span class="nc" id="L235">                findForeignKeyFKIndex(fkInfo.getFkName(), fkInfo.getFkTable(), columns, tables, false),</span>
+<span class="nc" id="L236">                (JdbcUniqueIndex) findForeignKeyFKIndex(fkInfo.getFkName(), fkInfo.getPkTable(), columns, tables, true),</span>
+<span class="nc" id="L237">                fkInfo.getOnUpdate(),</span>
+<span class="nc" id="L238">                fkInfo.getOnDelete(),</span>
+<span class="nc" id="L239">                fkInfo.getDeferrability());</span>
+
+<span class="nc" id="L241">        log.trace(&quot;Foreign Key loaded: {}&quot;, fk);</span>
+<span class="nc" id="L242">        return fk;</span>
+    }
+
+<span class="nc bnc" id="L245" title="All 8 branches missed.">    private JdbcIndex findForeignKeyFKIndex(@NonNull String fkName, @NonNull FKInfo.Table fk, @NonNull List&lt;FKColInfo&gt; columns, @NonNull Map&lt;String, JdbcTable&gt; tables, boolean isReferenced) {</span>
+<span class="nc" id="L246">        String tableName = NameUtil.generateFullyQualifiedName(fk.getCatalog(), fk.getSchema(), fk.getTable());</span>
+
+<span class="nc" id="L248">        JdbcTable table = tables.get(tableName);</span>
+
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (table == null) {</span>
+<span class="nc" id="L251">            throw new IllegalStateException(String.format(&quot;No table named '%s'&quot;, tableName));</span>
+        }
+
+<span class="nc" id="L254">        List&lt;JdbcIndex&gt; indexes = table.findIndexCovering(isReferenced, JdbcIndex.Coverage.MustCoverExact,</span>
+<span class="nc" id="L255">                columns.stream()</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                        .map(isReferenced ? FKColInfo::getPkColumn : FKColInfo::getFkColumn)</span>
+<span class="nc" id="L257">                        .collect(Collectors.toUnmodifiableList()));</span>
+
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (indexes.size() &gt; 0) {</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">            if (indexes.size() &gt; 1) {</span>
+<span class="nc" id="L261">                StringWriter sw = new StringWriter();</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">                for (JdbcIndex index : indexes) {</span>
+<span class="nc" id="L263">                    sw.append('\n').append(index.toString());</span>
+<span class="nc" id="L264">                }</span>
+
+<span class="nc" id="L266">                log.warn(&quot;Found duplicate indexes for foreign key '{}': {}&quot;, fkName, sw.toString());</span>
+            }
+
+<span class="nc" id="L269">            JdbcIndex result = null;</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">            for (JdbcIndex index : indexes) {</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">                if (result == null) {</span>
+<span class="nc" id="L272">                    result = index;</span>
+<span class="nc bnc" id="L273" title="All 4 branches missed.">                } else if (!(result instanceof JdbcUniqueIndex) &amp;&amp; index instanceof JdbcUniqueIndex) {</span>
+<span class="nc" id="L274">                    result = index;</span>
+                }
+<span class="nc" id="L276">            }</span>
+<span class="nc" id="L277">            return result;</span>
+
+        } else {
+            JdbcIndex result;
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if (isReferenced) {</span>
+<span class="nc" id="L282">                log.error(&quot;The foreign key '{}' on table '{}' does not reference a unique key. Unicity cannot be guaranteed!.&quot;,</span>
+                        fkName, tableName);
+<span class="nc" id="L284">                result = new JdbcUniqueIndex(</span>
+                        null,
+<span class="nc" id="L286">                        columns.stream()</span>
+<span class="nc" id="L287">                                .map(c -&gt; table.getColumnsByName().get(c.getPkColumn()))</span>
+<span class="nc" id="L288">                                .collect(Collectors.toUnmodifiableList()));</span>
+            } else {
+<span class="nc" id="L290">                result = new JdbcIndex(</span>
+                        null,
+<span class="nc" id="L292">                        columns.stream()</span>
+<span class="nc" id="L293">                                .map(c -&gt; table.getColumnsByName().get(c.getFkColumn()))</span>
+<span class="nc" id="L294">                                .collect(Collectors.toUnmodifiableList()));</span>
+            }
+
+<span class="nc" id="L297">            result.setTable(table);</span>
+<span class="nc" id="L298">            return result;</span>
+        }
+    }
+
+    private ForeignKey.Action mapImportedForeignKeyRule(short rule) {
+<span class="nc bnc" id="L303" title="All 6 branches missed.">        switch (rule) {</span>
+<span class="nc" id="L304">            case DatabaseMetaData.importedKeyNoAction   : return ForeignKey.Action.NoAction;</span>
+<span class="nc" id="L305">            case DatabaseMetaData.importedKeyCascade    : return ForeignKey.Action.Cascade;</span>
+<span class="nc" id="L306">            case DatabaseMetaData.importedKeySetNull    : return ForeignKey.Action.SetNull;</span>
+<span class="nc" id="L307">            case DatabaseMetaData.importedKeySetDefault : return ForeignKey.Action.SetDefault;</span>
+<span class="nc" id="L308">            case DatabaseMetaData.importedKeyRestrict   : return ForeignKey.Action.Restrict;</span>
+<span class="nc" id="L309">            default: throw new IllegalArgumentException(String.format(&quot;Unrecognized rule: %d&quot;, rule));</span>
+        }
+    }
+
+    private ForeignKey.ValidationDeferrability mapImportedDeferrability(short deferrability) {
+<span class="nc bnc" id="L314" title="All 4 branches missed.">        switch (deferrability) {</span>
+<span class="nc" id="L315">            case DatabaseMetaData.importedKeyInitiallyDeferred  : return ForeignKey.ValidationDeferrability.InitiallyDeferred;</span>
+<span class="nc" id="L316">            case DatabaseMetaData.importedKeyInitiallyImmediate : return ForeignKey.ValidationDeferrability.Deferrable;</span>
+<span class="nc" id="L317">            case DatabaseMetaData.importedKeyNotDeferrable      : return ForeignKey.ValidationDeferrability.NotDeferrable;</span>
+<span class="nc" id="L318">            default: throw new IllegalArgumentException(String.format(&quot;Unrecognized deferrability: %d&quot;, deferrability));</span>
+        }
+    }
+
+<span class="nc bnc" id="L322" title="All 2 branches missed.">    public Map&lt;JdbcTable, Map&lt;String, JdbcRelation&gt;&gt; loadRelations(@NonNull Map&lt;JdbcTable, Map&lt;String, ForeignKey&gt;&gt; foreignKeys) {</span>
+
+<span class="nc" id="L324">        Map&lt;JdbcTable, Map&lt;String, JdbcRelation&gt;&gt; relations = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">        for (Map.Entry&lt;JdbcTable, Map&lt;String, ForeignKey&gt;&gt; entry : foreignKeys.entrySet()) {</span>
+<span class="nc" id="L326">            relations.computeIfAbsent(entry.getKey(), x -&gt; new HashMap&lt;&gt;());</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">            for (ForeignKey foreignKey : entry.getValue().values()) {</span>
+<span class="nc" id="L328">                JdbcRelation[] newRelations = JdbcRelation.of(foreignKeys, foreignKey);</span>
+
+<span class="nc" id="L330">                log.trace(&quot;Relation loaded: {}&quot;, newRelations[0]);</span>
+<span class="nc" id="L331">                log.trace(&quot;Relation loaded: {}&quot;, newRelations[1]);</span>
+
+<span class="nc" id="L333">                relations.computeIfAbsent(newRelations[0].getReferencing().getTable(), x -&gt; new HashMap&lt;&gt;()).put(newRelations[0].getName(), newRelations[0]);</span>
+<span class="nc" id="L334">                relations.computeIfAbsent(newRelations[0].getReferenced ().getTable(), x -&gt; new HashMap&lt;&gt;()).put(newRelations[1].getName(), newRelations[1]);</span>
+<span class="nc" id="L335">            }</span>
+<span class="nc" id="L336">        }</span>
+
+<span class="nc" id="L338">        return relations;</span>
+    }
+
+    private &lt;G, O extends Comparable&lt;O&gt;, V, R&gt; List&lt;R&gt; aggregateResultSet(
+            ResultSet resultSet,
+            SqlFunction&lt;ResultSet, G&gt; groupSupplier,
+            SqlFunction&lt;ResultSet, O&gt; orderSupplier,
+            SqlFunction&lt;ResultSet, V&gt; valueSupplier,
+            BiFunction&lt;G, List&lt;V&gt;, R&gt; aggregator) throws SQLException {
+
+<span class="nc" id="L348">        Map&lt;G, Map&lt;O, V&gt;&gt; groups = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L350" title="All 2 branches missed.">        while (resultSet.next()) {</span>
+<span class="nc" id="L351">            G group = groupSupplier.apply(resultSet);</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">            if (! groups.containsKey(group)) {</span>
+<span class="nc" id="L353">                groups.put(group, new HashMap&lt;&gt;());</span>
+            }
+
+<span class="nc" id="L356">            O order = orderSupplier.apply(resultSet);</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">            if (! groups.get(group).containsKey(order)) {</span>
+<span class="nc" id="L358">                groups.get(group).put(order, valueSupplier.apply(resultSet));</span>
+            } else {
+<span class="nc" id="L360">                throw new IllegalStateException(String.format(&quot;Duplicate order values are not allowed: %s&quot;, order));</span>
+            }
+<span class="nc" id="L362">        }</span>
+
+<span class="nc" id="L364">        return groups</span>
+<span class="nc" id="L365">                .entrySet()</span>
+<span class="nc" id="L366">                .stream()</span>
+<span class="nc" id="L367">                .map(e -&gt; aggregator.apply(</span>
+<span class="nc" id="L368">                        e.getKey(),</span>
+<span class="nc" id="L369">                        e.getValue()</span>
+<span class="nc" id="L370">                                .entrySet()</span>
+<span class="nc" id="L371">                                .stream()</span>
+<span class="nc" id="L372">                                .sorted(Map.Entry.comparingByKey())</span>
+<span class="nc" id="L373">                                .map(Map.Entry::getValue)</span>
+<span class="nc" id="L374">                                .collect(Collectors.toUnmodifiableList())))</span>
+<span class="nc" id="L375">                .collect(Collectors.toUnmodifiableList());</span>
+    }
+
+<span class="nc bnc" id="L378" title="All 4 branches missed.">    private &lt;T&gt; T search(@NonNull List&lt;T&gt; list, @NonNull Predicate&lt;T&gt; predicate) {</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">        for (T t : list) {</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            if (predicate.test(t)) {</span>
+<span class="nc" id="L381">                return t;</span>
+            }
+<span class="nc" id="L383">        }</span>
+
+<span class="nc" id="L385">        return null;</span>
+    }
+
+<span class="nc bnc" id="L388" title="All 8 branches missed.">    private &lt;T&gt; T safeGetObject(@NonNull ResultSet rs, @NonNull String column, @NonNull SqlBiFunction&lt;ResultSet, String, T&gt; getter, @NonNull T ifNull) throws SQLException {</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">        for (int i=1; i&lt;=rs.getMetaData().getColumnCount(); i++) {</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">            if (rs.getMetaData().getColumnName(i).equals(column)) {</span>
+<span class="nc" id="L391">                return getter.apply(rs, column);</span>
+            }
+        }
+
+<span class="nc" id="L395">        return ifNull;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

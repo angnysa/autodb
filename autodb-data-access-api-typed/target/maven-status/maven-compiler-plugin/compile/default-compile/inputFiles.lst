@@ -1,0 +1,14 @@
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedOneToOne.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedToOne.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/TypedTable.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedOneTo.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedRelation.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/TypedColumn.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedManyToMany.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedOneToMany.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/TypedDatabase.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedToMany.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedManyToOne.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/TypedUniqueIndex.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/TypedIndex.java
+/home/sylvain/Development/github/crud/autodb-data-access-api-typed/src/main/java/org/angnysa/autodb/typed/api/metadata/relations/TypedManyTo.java

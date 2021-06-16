@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jdbc40Accessors.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">autodb-data-access-jdbc</a> &gt; <a href="index.source.html" class="el_package">org.angnysa.autodb.query.jdbc.types.jdbc40</a> &gt; <span class="el_source">Jdbc40Accessors.java</span></div><h1>Jdbc40Accessors.java</h1><pre class="source lang-java linenums">package org.angnysa.autodb.query.jdbc.types.jdbc40;
+
+import org.angnysa.autodb.query.jdbc.types.JdbcTypeAccessor;
+import org.angnysa.autodb.query.jdbc.types.TypeAccessor;
+import org.angnysa.autodb.query.jdbc.types.jdbc40.javatime.*;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.sql.JDBCType;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.*;
+
+<span class="nc" id="L15">public class Jdbc40Accessors {</span>
+    // ARRAY
+<span class="nc" id="L17">    private static final TypeAccessor&lt;Long&gt;           ACCESSOR_BIGINT               = new JdbcTypeAccessor&lt;&gt;(JDBCType.BIGINT        , null, Long.class        , ResultSet::getLong            , PreparedStatement::setLong            );</span>
+<span class="nc" id="L18">    private static final TypeAccessor&lt;byte[]&gt;         ACCESSOR_BINARY               = new JdbcTypeAccessor&lt;&gt;(JDBCType.BINARY        , null, byte[].class      , ResultSet::getBytes           , PreparedStatement::setBytes           );</span>
+<span class="nc" id="L19">    private static final TypeAccessor&lt;Boolean&gt;        ACCESSOR_BIT                  = new JdbcTypeAccessor&lt;&gt;(JDBCType.BIT           , null, Boolean.class     , ResultSet::getBoolean         , PreparedStatement::setBoolean         );</span>
+<span class="nc" id="L20">    private static final TypeAccessor&lt;InputStream&gt;    ACCESSOR_BLOB                 = new JdbcTypeAccessor&lt;&gt;(JDBCType.BLOB          , null, InputStream.class , ResultSet::getBinaryStream    , PreparedStatement::setBinaryStream    );</span>
+<span class="nc" id="L21">    private static final TypeAccessor&lt;Boolean&gt;        ACCESSOR_BOOLEAN              = new JdbcTypeAccessor&lt;&gt;(JDBCType.BOOLEAN       , null, Boolean.class     , ResultSet::getBoolean         , PreparedStatement::setBoolean         );</span>
+<span class="nc" id="L22">    private static final TypeAccessor&lt;String&gt;         ACCESSOR_CHAR                 = new JdbcTypeAccessor&lt;&gt;(JDBCType.CHAR          , null, String.class      , ResultSet::getString          , PreparedStatement::setString          );</span>
+<span class="nc" id="L23">    private static final TypeAccessor&lt;Reader&gt;         ACCESSOR_CLOB                 = new JdbcTypeAccessor&lt;&gt;(JDBCType.CLOB          , null, Reader.class      , ResultSet::getCharacterStream , PreparedStatement::setCharacterStream );</span>
+    // DATALINK
+<span class="nc" id="L25">    private static final TypeAccessor&lt;LocalDate&gt;      ACCESSOR_DATE                 = new LocalDateAccessor();</span>
+<span class="nc" id="L26">    private static final TypeAccessor&lt;BigDecimal&gt;     ACCESSOR_DECIMAL              = new JdbcTypeAccessor&lt;&gt;(JDBCType.DECIMAL       , null, BigDecimal.class  , ResultSet::getBigDecimal      , PreparedStatement::setBigDecimal      );</span>
+    // DISTINCT
+<span class="nc" id="L28">    private static final TypeAccessor&lt;Double&gt;         ACCESSOR_DOUBLE               = new JdbcTypeAccessor&lt;&gt;(JDBCType.DOUBLE        , null, Double.class      , ResultSet::getDouble          , PreparedStatement::setDouble          );</span>
+<span class="nc" id="L29">    private static final TypeAccessor&lt;Float&gt;          ACCESSOR_FLOAT                = new JdbcTypeAccessor&lt;&gt;(JDBCType.FLOAT         , null, Float.class       , ResultSet::getFloat           , PreparedStatement::setFloat           );</span>
+<span class="nc" id="L30">    private static final TypeAccessor&lt;Integer&gt;        ACCESSOR_INTEGER              = new JdbcTypeAccessor&lt;&gt;(JDBCType.INTEGER       , null, Integer.class     , ResultSet::getInt             , PreparedStatement::setInt             );</span>
+    // JAVA_OBJECT
+<span class="nc" id="L32">    private static final TypeAccessor&lt;String&gt;         ACCESSOR_LONGNVARCHAR_STRING  = new JdbcTypeAccessor&lt;&gt;(JDBCType.LONGNVARCHAR  , null, String.class      , ResultSet::getNString         , PreparedStatement::setNString         );</span>
+<span class="nc" id="L33">    private static final TypeAccessor&lt;Reader&gt;         ACCESSOR_LONGNVARCHAR_READER  = new JdbcTypeAccessor&lt;&gt;(JDBCType.LONGNVARCHAR  , null, Reader.class      , ResultSet::getNCharacterStream, PreparedStatement::setNCharacterStream);</span>
+<span class="nc" id="L34">    private static final TypeAccessor&lt;byte[]&gt;         ACCESSOR_LONGVARBINARY_BYTE   = new JdbcTypeAccessor&lt;&gt;(JDBCType.LONGVARBINARY , null, byte[].class      , ResultSet::getBytes           , PreparedStatement::setBytes           );</span>
+<span class="nc" id="L35">    private static final TypeAccessor&lt;InputStream&gt;    ACCESSOR_LONGVARBINARY_STREAM = new JdbcTypeAccessor&lt;&gt;(JDBCType.LONGVARBINARY , null, InputStream.class , ResultSet::getBinaryStream    , PreparedStatement::setBinaryStream    );</span>
+<span class="nc" id="L36">    private static final TypeAccessor&lt;String&gt;         ACCESSOR_LONGVARCHAR_STRING   = new JdbcTypeAccessor&lt;&gt;(JDBCType.LONGVARCHAR   , null, String.class      , ResultSet::getString          , PreparedStatement::setString          );</span>
+<span class="nc" id="L37">    private static final TypeAccessor&lt;Reader&gt;         ACCESSOR_LONGVARCHAR_READER   = new JdbcTypeAccessor&lt;&gt;(JDBCType.LONGVARCHAR   , null, Reader.class      , ResultSet::getCharacterStream , PreparedStatement::setCharacterStream );</span>
+<span class="nc" id="L38">    private static final TypeAccessor&lt;String&gt;         ACCESSOR_NCHAR                = new JdbcTypeAccessor&lt;&gt;(JDBCType.NCHAR         , null, String.class      , ResultSet::getNString         , PreparedStatement::setNString         );</span>
+<span class="nc" id="L39">    private static final TypeAccessor&lt;Reader&gt;         ACCESSOR_NCLOB                = new JdbcTypeAccessor&lt;&gt;(JDBCType.NCLOB         , null, Reader.class      , ResultSet::getNCharacterStream, PreparedStatement::setNCharacterStream);</span>
+    // NULL
+<span class="nc" id="L41">    private static final TypeAccessor&lt;BigDecimal&gt;     ACCESSOR_NUMERIC              = new JdbcTypeAccessor&lt;&gt;(JDBCType.NUMERIC       , null, BigDecimal.class  , ResultSet::getBigDecimal      , PreparedStatement::setBigDecimal      );</span>
+<span class="nc" id="L42">    private static final TypeAccessor&lt;String&gt;         ACCESSOR_NVARCHAR             = new JdbcTypeAccessor&lt;&gt;(JDBCType.NVARCHAR      , null, String.class      , ResultSet::getNString         , PreparedStatement::setNString         );</span>
+    // OTHER
+<span class="nc" id="L44">    private static final TypeAccessor&lt;Double&gt;         ACCESSOR_REAL                 = new JdbcTypeAccessor&lt;&gt;(JDBCType.REAL          , null, Double.class      , ResultSet::getDouble          , PreparedStatement::setDouble          );</span>
+    // REF
+    // REF_CURSOR
+    // ROWID
+<span class="nc" id="L48">    private static final TypeAccessor&lt;Short&gt;          ACCESSOR_SMALLINT             = new JdbcTypeAccessor&lt;&gt;(JDBCType.SMALLINT      , null, Short.class       , ResultSet::getShort           , PreparedStatement::setShort           );</span>
+    // SQLXML
+    // STRUCT
+<span class="nc" id="L51">    private static final TypeAccessor&lt;LocalTime&gt;      ACCESSOR_TIME                 = new LocalTimeAccessor();</span>
+<span class="nc" id="L52">    private static final TypeAccessor&lt;OffsetTime&gt;     ACCESSOR_TIME_WITH_TIMEZONE   = new OffsetTimeAccessor();</span>
+<span class="nc" id="L53">    private static final TypeAccessor&lt;LocalDateTime&gt;  ACCESSOR_TIMESTAMP            = new LocalDateTimeAccessor();</span>
+<span class="nc" id="L54">    private static final TypeAccessor&lt;OffsetDateTime&gt; ACCESSOR_TIMESTAMP_TZ_OFFSET  = new OffsetDateTimeAccessor();</span>
+<span class="nc" id="L55">    private static final TypeAccessor&lt;ZonedDateTime&gt;  ACCESSOR_TIMESTAMP_TZ_ZONED   = new ZonedDateTimeAccessor();</span>
+<span class="nc" id="L56">    private static final TypeAccessor&lt;Instant&gt;        ACCESSOR_TIMESTAMP_TZ_INSTANT = new InstantAccessor();</span>
+<span class="nc" id="L57">    private static final TypeAccessor&lt;Byte&gt;           ACCESSOR_TINYINT              = new JdbcTypeAccessor&lt;&gt;(JDBCType.TINYINT       , null, Byte.class        , ResultSet::getByte            , PreparedStatement::setByte            );</span>
+<span class="nc" id="L58">    private static final TypeAccessor&lt;byte[]&gt;         ACCESSOR_VARBINARY            = new JdbcTypeAccessor&lt;&gt;(JDBCType.VARBINARY     , null, byte[].class      , ResultSet::getBytes           , PreparedStatement::setBytes           );</span>
+<span class="nc" id="L59">    private static final TypeAccessor&lt;String&gt;         ACCESSOR_VARCHAR              = new JdbcTypeAccessor&lt;&gt;(JDBCType.VARCHAR       , null, String.class      , ResultSet::getString          , PreparedStatement::setString          );</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

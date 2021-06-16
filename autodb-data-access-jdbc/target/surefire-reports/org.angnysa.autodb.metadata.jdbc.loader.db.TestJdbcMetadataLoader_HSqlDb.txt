@@ -1,0 +1,58 @@
+-------------------------------------------------------------------------------
+Test set: org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb
+-------------------------------------------------------------------------------
+Tests run: 43, Failures: 7, Errors: 11, Skipped: 0, Time elapsed: 1.364 s <<< FAILURE! - in org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.043 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.034 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.035 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.033 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.025 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.032 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadRelations  Time elapsed: 0.04 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.029 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.025 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.024 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.021 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.023 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.023 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadTables  Time elapsed: 0.022 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected the key 'AB_ID1' to be present ==> expected: <true> but was: <false>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadDatabase  Time elapsed: 0.02 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadForeignKeys  Time elapsed: 0.03 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_121_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadForeignKeys  Time elapsed: 0.033 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_M21_B'
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_HSqlDb.testLoadForeignKeys  Time elapsed: 0.019 s  <<< ERROR!
+java.lang.IllegalStateException: No table named 'PUBLIC.PUBLIC.TEST_M2M_REL'
+

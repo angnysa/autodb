@@ -1,0 +1,3 @@
+org/angnysa/autodb/metadata/jdbc/loader/db/TestJdbcMetadataLoader_H2.class
+org/angnysa/autodb/metadata/jdbc/loader/db/TestJdbcMetadataLoader_Postgresql.class
+org/angnysa/autodb/metadata/jdbc/loader/db/TestJdbcMetadataLoader_HSqlDb.class

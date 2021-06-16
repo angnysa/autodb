@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/autodb-data-access-api/autodb-data-access-api.iml" filepath="$PROJECT_DIR$/autodb-data-access-api/autodb-data-access-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autodb-data-access-api-typed/autodb-data-access-api-typed.iml" filepath="$PROJECT_DIR$/autodb-data-access-api-typed/autodb-data-access-api-typed.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autodb-data-access-jdbc/autodb-data-access-jdbc.iml" filepath="$PROJECT_DIR$/autodb-data-access-jdbc/autodb-data-access-jdbc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autodb-data-access-jpa/autodb-data-access-jpa.iml" filepath="$PROJECT_DIR$/autodb-data-access-jpa/autodb-data-access-jpa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autodb-root.iml" filepath="$PROJECT_DIR$/autodb-root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testcontainers-junit4-stub/testcontainers-junit4-stub.iml" filepath="$PROJECT_DIR$/testcontainers-junit4-stub/testcontainers-junit4-stub.iml" />
+    </modules>
+  </component>
+</project>

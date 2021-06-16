@@ -1,0 +1,212 @@
+package org.angnysa.autodb.metadata.api.utils;
+
+import org.angnysa.autodb.metadata.api.*;
+import org.angnysa.autodb.metadata.api.relations.*;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.List;
+
+public class Dumper {
+
+    public static String dumpDatabase(Database<?> database) throws IOException {
+        return dumpDatabase("", database);
+    }
+
+    public static String dumpDatabase(String prefix, Database<?> database) throws IOException {
+        StringWriter sw = new StringWriter();
+        dumpDatabase(prefix, database, sw);
+        return sw.toString();
+    }
+
+    public static void dumpDatabase(Database<?> database, Writer writer) throws IOException {
+        dumpDatabase("", database, writer);
+    }
+
+    public static void dumpDatabase(String prefix, Database<?> database, Writer writer) throws IOException {
+        writer.append(prefix).append(String.format("%s name: '%s', version: '%s'",
+                database.getClass().getSimpleName(), database.getName(), database.getVersion()));
+
+        for (Table table : database.getTables()) {
+            writer.append("\n");
+            dumpTable(prefix+"  ", table, writer);
+        }
+    }
+
+    public static String dumpTable(Table table) throws IOException {
+        return dumpTable("", table);
+    }
+
+    public static String dumpTable(String prefix, Table table) throws IOException {
+        StringWriter sw = new StringWriter();
+        dumpTable(prefix, table, sw);
+        return sw.toString();
+    }
+
+    public static void dumpTable(Table table, Writer writer) throws IOException {
+        dumpTable("", table, writer);
+    }
+
+    public static void dumpTable(String prefix, Table table, Writer writer) throws IOException {
+        writer.append(prefix).append(String.format("%s name: '%s', type: '%s'\n",
+                table.getClass().getSimpleName(), table.getFullyQualifiedName(), table.getTableType()));
+
+        prefix += "  ";
+
+        writer.append(prefix).append("Columns:");
+
+        for (Column column : table.getColumns()) {
+            writer.append("\n");
+            dumpColumn(prefix+"  ", column, writer);
+        }
+
+        writer.append('\n').append(prefix).append("Primary Key:\n");
+        dumpIndex(prefix + "  ", table.getPrimaryKey(), writer);
+
+        if (table.getIndices().size() > 0) {
+            writer.append('\n').append(prefix).append("Indexes:");
+            for (Index index : table.getIndices()) {
+                writer.append("\n");
+                dumpIndex(prefix + "  ", index, writer);
+            }
+        }
+
+        if (table.getRelations().size() > 0) {
+            writer.append('\n').append(prefix).append("Relations:");
+            for (Relation relation : table.getRelations()) {
+                writer.append("\n");
+                dumpRelation(prefix + "  ", relation, writer);
+            }
+        }
+    }
+
+    public static String dumpIndex(Index index) throws IOException {
+        return dumpIndex("", index);
+    }
+
+    public static String dumpIndex(String prefix, Index index) throws IOException {
+        StringWriter sw = new StringWriter();
+        dumpIndex(prefix, index, sw);
+        return sw.toString();
+    }
+
+    public static void dumpIndex(Index index, Writer writer) throws IOException {
+        dumpIndex("", index, writer);
+    }
+
+    public static void dumpIndex(String prefix, Index index, Writer writer) throws IOException {
+        writer.append(prefix).append(String.format("%s [%s] name: '%s', columns: %s",
+                index.getClass().getSimpleName(),
+                index instanceof UniqueIndex ? "unique" : "index",
+                index.getName(),
+                columnsName(index.getColumns())));
+    }
+
+    public static String columnsName(List<? extends Column> columns) {
+        StringBuilder list = new StringBuilder("(");
+
+        for (int i = 0; i < columns.size(); i++) {
+            Column column = columns.get(i);
+            if (i != 0) {
+                list.append(", ");
+            }
+            list.append("'").append(column.getName()).append("'");
+        }
+
+        list.append(")");
+
+        return list.toString();
+    }
+
+    public static String dumpColumn(Column column) throws IOException {
+        return dumpColumn("", column);
+    }
+
+    public static String dumpColumn(String prefix, Column column) throws IOException {
+        StringWriter sw = new StringWriter();
+        dumpColumn(prefix, column, sw);
+        return sw.toString();
+    }
+
+    public static void dumpColumn(Column column, Writer writer) throws IOException {
+        dumpColumn("", column, writer);
+    }
+
+    public static void dumpColumn(String prefix, Column column, Writer writer) throws IOException {
+        writer.append(prefix).append(String.format("%s %s %s(%s) %s",
+                column.getClass().getSimpleName(),
+                column.getName(),
+                column.getType(),
+                constraints(column),
+                column.isAutoGenerated() ? "[auto]" : ""));
+    }
+
+    private static String constraints(Column column) {
+        StringBuilder constraint = new StringBuilder();
+
+        if (column.isMandatory()) {
+            constraint.append("mandatory");
+        }
+
+        if (column.getMaxLength() != null && column.getMaxLength() > 0) {
+            if (constraint.length() > 0) {
+                constraint.append(", ");
+            }
+            constraint.append("len < ").append(column.getMaxLength());
+        }
+
+        if (column.getNumFraction() != null && column.getNumFraction() > 0) {
+            if (constraint.length() > 0) {
+                constraint.append(", ");
+            }
+            constraint.append("fractions < ").append(column.getNumFraction());
+
+            if (column.getRadix() != null && column.getRadix() > 0) {
+                constraint.append(String.format("(%d)", column.getRadix()));
+            }
+        }
+
+        return constraint.toString();
+    }
+
+    public static String dumpRelation(Relation relation) throws IOException {
+        return dumpRelation("", relation);
+    }
+
+    public static String dumpRelation(String prefix, Relation relation) throws IOException {
+        StringWriter sw = new StringWriter();
+        dumpRelation(prefix, relation, sw);
+        return sw.toString();
+    }
+
+    public static void dumpRelation(Relation relation, Writer writer) throws IOException {
+        dumpRelation("  ", relation, writer);
+    }
+
+    public static void dumpRelation(String prefix, Relation relation, Writer writer) throws IOException {
+        writer.append(prefix).append(String.format("%s %s [%s %s] from %s%s to %s%s",
+                relation.getClass().getSimpleName(),
+                relation.getName(),
+                relation.isMandatory() ? "mandatory," : "optional,",
+                relationType(relation),
+                relation.getReferencing().getTable().getFullyQualifiedName(),
+                columnsName(relation.getReferencing().getColumns()),
+                relation.getReferenced().getTable().getFullyQualifiedName(),
+                columnsName(relation.getReferenced().getColumns())));
+    }
+
+    private static String relationType(Relation relation) {
+        if (relation instanceof OneToOne) {
+            return "one-to-one";
+        } else if (relation instanceof OneToMany) {
+            return "one-to-many";
+        } else if (relation instanceof ManyToOne) {
+            return "many-to-one";
+        } else if (relation instanceof ManyToMany) {
+            return "many-to-many";
+        } else {
+            return "UNKNOWN";
+        }
+    }
+}

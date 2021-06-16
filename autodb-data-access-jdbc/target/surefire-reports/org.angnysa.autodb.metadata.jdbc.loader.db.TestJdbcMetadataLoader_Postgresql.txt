@@ -1,0 +1,121 @@
+-------------------------------------------------------------------------------
+Test set: org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql
+-------------------------------------------------------------------------------
+Tests run: 43, Failures: 10, Errors: 29, Skipped: 0, Time elapsed: 214.759 s <<< FAILURE! - in org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 3.998 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_121_A' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 3.962 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_121_B' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 3.954 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M21_A' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 4.058 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M21_B' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 4.038 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M2M_A' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 4.008 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M2M_B' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadPrimaryKey  Time elapsed: 3.919 s  <<< ERROR!
+java.lang.IllegalStateException: Table 'test.public.TEST_M2M_REL' has no primary key
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 4.108 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 4.009 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 3.97 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 3.976 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 3.945 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 4.009 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadRelations  Time elapsed: 3.995 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 3.969 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 4.014 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 4.032 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 3.864 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 4.023 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 4.117 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadTables  Time elapsed: 4.027 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 4.038 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 4.031 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <4> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 3.977 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 3.974 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <4> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 3.971 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 4.034 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadColumns  Time elapsed: 3.984 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <3> but was: <0>
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadDatabase  Time elapsed: 8.065 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadIndices  Time elapsed: 4.046 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected index matching: ExpectedIndex(unique=true, columns=[A_ID2, A_ID2])
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadIndices  Time elapsed: 3.969 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected index matching: ExpectedIndex(unique=false, columns=[A_ID2, A_ID2])
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadIndices  Time elapsed: 3.989 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected index matching: ExpectedIndex(unique=false, columns=[AB_ID1, A_ID2])
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 4.056 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 4.073 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 3.974 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 3.984 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 3.985 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 3.93 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+
+org.angnysa.autodb.metadata.jdbc.loader.db.TestJdbcMetadataLoader_Postgresql.testLoadForeignKeys  Time elapsed: 3.894 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "String.matches(String)" because "catalog" is null
+

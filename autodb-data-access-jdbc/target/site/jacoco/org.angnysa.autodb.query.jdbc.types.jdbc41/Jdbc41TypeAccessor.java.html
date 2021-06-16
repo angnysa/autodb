@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jdbc41TypeAccessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">autodb-data-access-jdbc</a> &gt; <a href="index.source.html" class="el_package">org.angnysa.autodb.query.jdbc.types.jdbc41</a> &gt; <span class="el_source">Jdbc41TypeAccessor.java</span></div><h1>Jdbc41TypeAccessor.java</h1><pre class="source lang-java linenums">package org.angnysa.autodb.query.jdbc.types.jdbc41;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.angnysa.autodb.query.jdbc.types.TypeAccessor;
+
+import java.sql.JDBCType;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+<span class="nc" id="L13">@RequiredArgsConstructor</span>
+@Getter
+public class Jdbc41TypeAccessor&lt;T&gt; implements TypeAccessor&lt;T&gt; {
+<span class="nc" id="L16">    private final JDBCType jdbcType;</span>
+<span class="nc" id="L17">    private final String sqlType;</span>
+<span class="nc" id="L18">    private final Class&lt;T&gt; javaClass;</span>
+
+    @Override
+<span class="nc bnc" id="L21" title="All 2 branches missed.">    public T get(@NonNull ResultSet rs, int index) throws SQLException {</span>
+<span class="nc" id="L22">        T t = rs.getObject(index, getJavaClass());</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if (rs.wasNull()) {</span>
+<span class="nc" id="L24">            return null;</span>
+        } else {
+<span class="nc" id="L26">            return t;</span>
+        }
+    }
+
+    @Override
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    public void set(@NonNull PreparedStatement stmt, int index, T data) throws SQLException {</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (data == null) {</span>
+<span class="nc" id="L33">            stmt.setNull(index, jdbcType.getVendorTypeNumber());</span>
+        } else {
+<span class="nc" id="L35">            stmt.setObject(index, data);</span>
+        }
+<span class="nc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

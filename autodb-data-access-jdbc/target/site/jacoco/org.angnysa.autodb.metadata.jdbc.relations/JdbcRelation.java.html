@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JdbcRelation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">autodb-data-access-jdbc</a> &gt; <a href="index.source.html" class="el_package">org.angnysa.autodb.metadata.jdbc.relations</a> &gt; <span class="el_source">JdbcRelation.java</span></div><h1>JdbcRelation.java</h1><pre class="source lang-java linenums">package org.angnysa.autodb.metadata.jdbc.relations;
+
+import lombok.Data;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
+import org.angnysa.autodb.metadata.api.relations.Relation;
+import org.angnysa.autodb.metadata.api.utils.Dumper;
+import org.angnysa.autodb.metadata.jdbc.*;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+<span class="pc bnc" id="L15" title="All 22 branches missed.">@Data</span>
+public abstract class JdbcRelation implements Relation {
+<span class="fc" id="L17">    private final String name;</span>
+<span class="nc" id="L18">    private final String description;</span>
+
+    @Override
+    public abstract JdbcIndex getReferencing();
+
+    @Override
+    public abstract JdbcIndex getReferenced();
+
+<span class="pc bpc" id="L26" title="2 of 4 branches missed.">    public static JdbcRelation[] of(@NonNull Map&lt;JdbcTable, Map&lt;String, ForeignKey&gt;&gt; foreignKeys, @NonNull ForeignKey foreignKey) {</span>
+        JdbcRelation[] relations;
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (foreignKey.getReferencing() instanceof JdbcUniqueIndex) {</span>
+
+<span class="fc" id="L30">            relations = new JdbcRelation[] {</span>
+                    new JdbcOneToOne(foreignKey, false),
+                    new JdbcOneToOne(foreignKey, true)};
+
+        } else {
+
+<span class="fc" id="L36">            JdbcTable relTable = foreignKey.getReferencing().getTable();</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">            if (isRelationTable(foreignKeys, relTable)) {</span>
+<span class="fc" id="L38">                relations = new JdbcRelation[] {</span>
+<span class="fc" id="L39">                        new JdbcManyToMany(foreignKey, getOtherForeignKey(foreignKeys, relTable, foreignKey)),</span>
+<span class="fc" id="L40">                        new JdbcManyToMany(getOtherForeignKey(foreignKeys, relTable, foreignKey), foreignKey)};</span>
+            } else {
+<span class="fc" id="L42">                relations = new JdbcRelation[] {</span>
+                        new JdbcManyToOne(foreignKey),
+                        new JdbcOneToMany(foreignKey)};
+            }
+
+        }
+
+<span class="fc" id="L49">        return relations;</span>
+    }
+
+    /**
+     * returns the 'other' foreign key for a relation table. See {@link #isRelationTable(Map, JdbcTable)} for definition.
+     *
+     * @param foreignKeys All the existing foreign keys
+     * @param table The table to target
+     * @param foreignKey The foreign key not to return
+     * @return
+     */
+    private static ForeignKey getOtherForeignKey(Map&lt;JdbcTable, Map&lt;String, ForeignKey&gt;&gt; foreignKeys, JdbcTable table, ForeignKey foreignKey) {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        for (ForeignKey fk : foreignKeys.get(table).values()) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            if (! fk.equals(foreignKey)) {</span>
+<span class="fc" id="L63">                return fk;</span>
+            }
+<span class="nc" id="L65">        }</span>
+
+<span class="nc" id="L67">        throw new IllegalStateException();</span>
+    }
+
+    /**
+     * checks if the given table is a relation table.
+     *
+     * A table is a relation table iff:
+     * &lt;ul&gt;
+     *     &lt;li&gt;it has two and only two foreign keys&lt;/li&gt;
+     *     &lt;li&gt;both foreign keys cover all columns of the table&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param foreignKeys
+     * @param table
+     * @return
+     */
+<span class="pc bpc" id="L83" title="2 of 4 branches missed.">    public static boolean isRelationTable(@NonNull Map&lt;JdbcTable, Map&lt;String, ForeignKey&gt;&gt; foreignKeys, @NonNull JdbcTable table) {</span>
+<span class="fc" id="L84">        Map&lt;String, ForeignKey&gt; tableForeignKeys = foreignKeys.getOrDefault(table, Map.of());</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (tableForeignKeys.size() == 2) {</span>
+
+<span class="fc" id="L87">            Set&lt;JdbcColumn&gt; columns = new HashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            for (ForeignKey foreignKey : tableForeignKeys.values()) {</span>
+<span class="fc" id="L89">                columns.addAll(foreignKey.getReferencing().getColumns());</span>
+<span class="fc" id="L90">            }</span>
+
+<span class="fc" id="L92">            return columns.equals(new HashSet&lt;&gt;(table.getColumns()));</span>
+        }
+
+<span class="fc" id="L95">        return false;</span>
+    }
+
+<span class="nc" id="L98">    @SneakyThrows</span>
+    @Override
+    public String toString() {
+<span class="fc" id="L101">        return Dumper.dumpRelation(this);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

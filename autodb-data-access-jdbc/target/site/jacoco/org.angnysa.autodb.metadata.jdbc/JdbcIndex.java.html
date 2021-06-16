@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JdbcIndex.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">autodb-data-access-jdbc</a> &gt; <a href="index.source.html" class="el_package">org.angnysa.autodb.metadata.jdbc</a> &gt; <span class="el_source">JdbcIndex.java</span></div><h1>JdbcIndex.java</h1><pre class="source lang-java linenums">package org.angnysa.autodb.metadata.jdbc;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import org.angnysa.autodb.metadata.api.Index;
+import org.angnysa.autodb.metadata.api.utils.Dumper;
+import org.angnysa.autodb.metadata.jdbc.utils.ListIndexerUtil;
+
+import java.util.List;
+import java.util.Map;
+
+@Data
+<span class="pc bpc" id="L15" title="20 of 30 branches missed.">@EqualsAndHashCode(exclude = &quot;table&quot;)</span>
+public class JdbcIndex implements Index {
+<span class="fc" id="L17">	private JdbcTable table;</span>
+<span class="fc" id="L18">	private final String name;</span>
+<span class="fc" id="L19">	private final List&lt;JdbcColumn&gt; columns;</span>
+<span class="fc" id="L20">	private final Map&lt;String, JdbcColumn&gt; columnsByName;</span>
+
+<span class="fc" id="L22">	public JdbcIndex(String name, List&lt;JdbcColumn&gt; columns) {</span>
+<span class="fc" id="L23">		this.name = name;</span>
+<span class="fc" id="L24">		this.columns = List.copyOf(columns);</span>
+
+<span class="fc" id="L26">		columnsByName = ListIndexerUtil.index(columns, JdbcColumn::getName);</span>
+<span class="fc" id="L27">	}</span>
+
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">	public void setTable(@NonNull JdbcTable table) {</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		if (this.table == null) {</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">			for (JdbcColumn column : columns) {</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">				if (column.getTable() != table) {</span>
+<span class="nc" id="L33">					throw new IllegalStateException(String.format(&quot;Column '%s' in index '%s' is linked to table '%s', expected '%s'&quot;,</span>
+<span class="nc" id="L34">							column.getName(), getName(), column.getTable().getFullyQualifiedName(), table.getFullyQualifiedName()));</span>
+				}
+<span class="fc" id="L36">			}</span>
+<span class="fc" id="L37">			this.table = table;</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">		} else if (this.table != table) {</span>
+<span class="nc" id="L39">			throw new IllegalStateException(String.format(&quot;Index '%s' is already linked to table '%s'&quot;, getName(), getTable().getFullyQualifiedName()));</span>
+		}
+<span class="fc" id="L41">	}</span>
+
+	@Override
+    public boolean covers(Coverage coverage, List&lt;String&gt; columnNames) {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">		if (coverage == Coverage.CanCoverLess) {</span>
+			// if the index can cover less than the requested columns, it just needs to cover the first one
+<span class="fc" id="L47">			return columnNames.get(0).equals(columns.get(0).getName());</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		} else if (columns.size() &lt; columnNames.size()) {</span>
+			// the first condition takes care of 'less'. The index must now cover at least the given columns.
+			// the index has less columns than requested, therefore it cannot match.
+<span class="fc" id="L51">			return false;</span>
+<span class="fc bfc" id="L52" title="All 4 branches covered.">		} else if (columns.size() &gt; columnNames.size() &amp;&amp; coverage == Coverage.MustCoverExact) {</span>
+			// cannot match if an exact match is requested and both lists are not the same size
+<span class="fc" id="L54">			return false;</span>
+		} else {
+<span class="pc bpc" id="L56" title="1 of 4 branches missed.">			for (int i = 0; i &lt; columnNames.size() &amp;&amp; i &lt; columns.size(); i++) {</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">				if (!columnNames.get(i).equals(this.columns.get(i).getName())) {</span>
+					// end of match, columns remaining in both, accept only if index can cover less than requested
+<span class="fc" id="L59">					return false;</span>
+				}
+			}
+
+<span class="fc bfc" id="L63" title="All 2 branches covered.">			if (columns.size() == columnNames.size()) {</span>
+				// full match
+<span class="fc" id="L65">				return true;</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">			} else if (columns.size() &gt; columnNames.size()) {</span>
+				// index covers more
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">				return coverage == Coverage.CanCoverMore;</span>
+			} else {
+				// index covers less
+<span class="nc" id="L71">				return false;</span>
+			}
+		}
+	}
+
+<span class="nc" id="L76">	@SneakyThrows</span>
+	@Override
+	public String toString() {
+<span class="fc" id="L79">		return Dumper.dumpIndex(this);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

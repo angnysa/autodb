@@ -1,0 +1,14 @@
+org/angnysa/autodb/typed/api/metadata/relations/TypedOneToMany.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedManyTo.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedManyToMany.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedManyToOne.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedToMany.class
+org/angnysa/autodb/typed/api/metadata/TypedTable.class
+org/angnysa/autodb/typed/api/metadata/TypedIndex.class
+org/angnysa/autodb/typed/api/metadata/TypedDatabase.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedOneToOne.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedToOne.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedRelation.class
+org/angnysa/autodb/typed/api/metadata/TypedColumn.class
+org/angnysa/autodb/typed/api/metadata/TypedUniqueIndex.class
+org/angnysa/autodb/typed/api/metadata/relations/TypedOneTo.class

@@ -1,0 +1,15 @@
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/ToMany.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/ToOne.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/ManyTo.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/ManyToOne.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/OneToOne.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/Column.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/UniqueIndex.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/OneToMany.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/ManyToMany.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/Index.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/OneTo.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/Table.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/relations/Relation.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/Database.java
+/home/sylvain/Development/github/crud/autodb-data-access-api/src/main/java/org/angnysa/autodb/metadata/api/utils/Dumper.java
